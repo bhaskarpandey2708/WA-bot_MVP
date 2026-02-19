@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WhatsApp Bot MVP Demo</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap");
+
+      :root {
+        --ink: #0d1b2a;
+        --surface: #f8f3ea;
+        --surface-2: #fffdfa;
+        --accent: #0d6efd;
+        --accent-2: #008a6e;
+        --muted: #5f6f81;
+        --ring: rgba(13, 110, 253, 0.2);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Manrope", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 15% 20%, #ffd89b 0%, transparent 40%),
+          radial-gradient(circle at 85% 15%, #c2f5e9 0%, transparent 35%),
+          linear-gradient(145deg, #f4ecdd 0%, #fefaf1 50%, #e8f4f1 100%);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      .shell {
+        width: min(920px, 100%);
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 18px;
+      }
+
+      .panel {
+        background: rgba(255, 253, 250, 0.92);
+        border: 1px solid rgba(13, 27, 42, 0.1);
+        border-radius: 16px;
+        box-shadow: 0 20px 50px rgba(13, 27, 42, 0.12);
+      }
+
+      .meta {
+        padding: 20px;
+      }
+
+      .tag {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        letter-spacing: 0.3px;
+        color: #084b3c;
+        background: rgba(0, 138, 110, 0.12);
+      }
+
+      h1 {
+        font-size: 26px;
+        line-height: 1.2;
+        margin: 12px 0;
+      }
+
+      .meta p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .quick-actions {
+        margin-top: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .quick-actions button {
+        border: 1px solid rgba(13, 110, 253, 0.3);
+        background: white;
+        color: var(--ink);
+        border-radius: 10px;
+        padding: 10px;
+        text-align: left;
+        cursor: pointer;
+        transition: transform 0.15s ease, border-color 0.15s ease;
+      }
+
+      .quick-actions button:hover {
+        transform: translateY(-1px);
+        border-color: var(--accent);
+      }
+
+      .chat {
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        overflow: hidden;
+      }
+
+      .chat-header {
+        padding: 16px 20px;
+        border-bottom: 1px solid rgba(13, 27, 42, 0.08);
+        background: linear-gradient(90deg, rgba(13, 110, 253, 0.09), transparent);
+      }
+
+      .chat-header strong {
+        font-size: 16px;
+      }
+
+      .chat-window {
+        padding: 16px;
+        overflow-y: auto;
+        max-height: 55vh;
+        background: repeating-linear-gradient(
+          45deg,
+          rgba(13, 27, 42, 0.01),
+          rgba(13, 27, 42, 0.01) 10px,
+          rgba(13, 27, 42, 0.02) 10px,
+          rgba(13, 27, 42, 0.02) 20px
+        );
+      }
+
+      .msg {
+        max-width: 82%;
+        margin-bottom: 10px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        white-space: pre-wrap;
+        animation: fadeIn 0.18s ease;
+      }
+
+      .msg.user {
+        margin-left: auto;
+        background: var(--accent);
+        color: white;
+        border-bottom-right-radius: 4px;
+      }
+
+      .msg.bot {
+        background: var(--surface);
+        border: 1px solid rgba(13, 27, 42, 0.08);
+        border-bottom-left-radius: 4px;
+      }
+
+      .chat-input {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        padding: 14px;
+        border-top: 1px solid rgba(13, 27, 42, 0.08);
+      }
+
+      .chat-input input {
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid rgba(13, 27, 42, 0.2);
+        padding: 11px 12px;
+        font-size: 15px;
+        outline: none;
+      }
+
+      .chat-input input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px var(--ring);
+      }
+
+      .chat-input button {
+        border: none;
+        border-radius: 10px;
+        padding: 11px 16px;
+        background: linear-gradient(135deg, var(--accent), #084bca);
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .footer-note {
+        margin-top: 14px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 860px) {
+        .shell {
+          grid-template-columns: 1fr;
+        }
+
+        .chat-window {
+          max-height: 48vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="panel meta">
+        <span class="tag">CLIENT DEMO</span>
+        <h1>Collections Reply Bot MVP</h1>
+        <p>
+          Use this UI to demo the same flow your WhatsApp webhook runs. It uses the server endpoint
+          <code>/demo/message</code>.
+        </p>
+
+        <div class="quick-actions">
+          <button data-text="menu">Open options</button>
+          <button data-text="1">I paid already</button>
+          <button data-text="2">Need assistance</button>
+          <button data-text="3">Request callback</button>
+        </div>
+
+        <p class="footer-note">
+          This is an MVP with demo data only. Production should add authentication, consent, and
+          integration with your collections/CRM systems.
+        </p>
+      </aside>
+
+      <main class="panel chat">
+        <div class="chat-header">
+          <strong>Collections Support Assistant</strong>
+        </div>
+        <div class="chat-window" id="chatWindow"></div>
+        <form class="chat-input" id="chatForm">
+          <input id="chatText" type="text" placeholder="Type a message..." autocomplete="off" />
+          <button type="submit">Send</button>
+        </form>
+      </main>
+    </div>
+
+    <script>
+      const chatWindow = document.getElementById("chatWindow");
+      const chatForm = document.getElementById("chatForm");
+      const chatText = document.getElementById("chatText");
+      const quickButtons = document.querySelectorAll("[data-text]");
+      const userId = `demo-${Math.random().toString(16).slice(2, 10)}`;
+
+      function addMessage(role, text) {
+        const el = document.createElement("div");
+        el.className = `msg ${role}`;
+        el.textContent = text;
+        chatWindow.appendChild(el);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }
+
+      async function sendMessage(text) {
+        if (!text.trim()) return;
+        addMessage("user", text);
+        chatText.value = "";
+
+        const response = await fetch("/demo/message", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, text })
+        });
+        const data = await response.json();
+        (data.replies || []).forEach((reply) => addMessage("bot", reply));
+      }
+
+      quickButtons.forEach((btn) => {
+        btn.addEventListener("click", () => sendMessage(btn.dataset.text || ""));
+      });
+
+      chatForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        sendMessage(chatText.value);
+      });
+
+      sendMessage("hi");
+    </script>
+  </body>
+</html>

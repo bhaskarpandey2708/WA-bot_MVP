@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clear Dues MVP</title>
+  <style>
+    :root {
+      --ink: #111729;
+      --muted: #4f5b79;
+      --surface: #ffffff;
+      --line: #d7dbe7;
+      --brand: #0f4fca;
+      --deep: #222e4f;
+      --mint: #c8e7df;
+      --warm: #d7c39a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: linear-gradient(120deg, var(--warm) 0%, #e4e8d9 38%, var(--mint) 100%);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 36px 18px 48px;
+    }
+
+    .hero {
+      border: 1px solid rgba(17, 23, 41, 0.1);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.88);
+      padding: 28px;
+      box-shadow: 0 14px 40px rgba(17, 23, 41, 0.08);
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: #d6ddb9;
+      color: #0f5b56;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.08;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      padding: 14px;
+    }
+
+    .card h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      color: var(--deep);
+    }
+
+    .card p {
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(120deg, #2367dd, #0f4fca);
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #425173;
+    }
+
+    @media (max-width: 860px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <span class="badge">Internal Operations</span>
+      <h1>Clear Dues MVP</h1>
+      <p>Public demo entry points for sharing the interface and workflow with clients.</p>
+      <div class="grid">
+        <article class="card">
+          <h2>Admin Portal</h2>
+          <p>Main operations interface for campaigns, exports, leads, and activity.</p>
+          <a class="btn" href="./admin.html">Open Admin</a>
+        </article>
+        <article class="card">
+          <h2>Chat Demo</h2>
+          <p>Demo chatbot flow UI for showing borrower-side interaction.</p>
+          <a class="btn" href="./demo.html">Open Demo Chat</a>
+        </article>
+        <article class="card">
+          <h2>Campaign Page</h2>
+          <p>Campaign quick page for basic send flow and testing.</p>
+          <a class="btn" href="./campaign.html">Open Campaign</a>
+        </article>
+      </div>
+      <p class="footer-note">
+        Note: On GitHub Pages, this is static UI-only unless your backend API is hosted separately.
+      </p>
+    </section>
+  </main>
+</body>
+</html>

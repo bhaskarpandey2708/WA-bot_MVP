@@ -1,0 +1,1949 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clear Dues Admin Portal</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap");
+
+      :root {
+        --ink-1: #11172a;
+        --ink-2: #4f5b76;
+        --line: rgba(17, 23, 42, 0.14);
+        --bg: #f6f3ea;
+        --surface: rgba(255, 253, 250, 0.95);
+        --primary: #115ddb;
+        --primary-2: #003f9e;
+        --success: #007652;
+        --danger: #a6213e;
+        --warn: #8c5900;
+        --shadow: 0 22px 48px rgba(17, 23, 42, 0.13);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Space Grotesk", sans-serif;
+        color: var(--ink-1);
+        background:
+          radial-gradient(circle at 12% 15%, #f9da9f 0%, transparent 34%),
+          radial-gradient(circle at 85% 10%, #c5f4e8 0%, transparent 37%),
+          radial-gradient(circle at 87% 88%, #d6ddff 0%, transparent 28%),
+          linear-gradient(136deg, #f1ebde 0%, #f9f5ee 52%, #edf8f2 100%);
+        padding: 18px;
+      }
+
+      .app {
+        width: min(1400px, 100%);
+        margin: 0 auto;
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .pill {
+        display: inline-block;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.3px;
+        border-radius: 999px;
+        padding: 4px 10px;
+        color: #084f3e;
+        background: rgba(0, 118, 82, 0.14);
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Sora", sans-serif;
+        margin: 0;
+      }
+
+      .muted {
+        color: var(--ink-2);
+      }
+
+      .small {
+        font-size: 12px;
+      }
+
+      input,
+      select,
+      textarea,
+      button {
+        font: inherit;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px 12px;
+        background: #fff;
+      }
+
+      textarea {
+        min-height: 150px;
+        resize: vertical;
+      }
+
+      label {
+        display: block;
+        margin-top: 12px;
+        margin-bottom: 6px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      button {
+        border: 0;
+        border-radius: 10px;
+        padding: 10px 14px;
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      }
+
+      .btn-success {
+        background: linear-gradient(135deg, #009b6c, #00684b);
+      }
+
+      .btn-dark {
+        background: #283044;
+      }
+
+      .btn-outline {
+        background: #fff;
+        color: var(--ink-1);
+        border: 1px solid var(--line);
+      }
+
+      .btn-danger {
+        background: linear-gradient(135deg, #ce3f5f, #96172f);
+      }
+
+      .results {
+        margin-top: 10px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fcfbf8;
+        padding: 10px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        white-space: pre-wrap;
+        max-height: 220px;
+        overflow: auto;
+      }
+
+      .results.compact-result {
+        max-height: 360px;
+      }
+
+      .login-wrap {
+        min-height: calc(100vh - 36px);
+        display: grid;
+        place-items: center;
+      }
+
+      .login-card {
+        width: min(460px, 100%);
+        padding: 26px;
+      }
+
+      .error {
+        margin-top: 10px;
+        color: var(--danger);
+      }
+
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
+      .toolbar-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .toolbar-left h1 {
+        margin-top: 6px;
+        font-size: clamp(24px, 3.3vw, 34px);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .stat {
+        padding: 14px;
+      }
+
+      .stat .value {
+        margin-top: 7px;
+        font-family: "Sora", sans-serif;
+        font-size: clamp(18px, 2.2vw, 28px);
+      }
+
+      .main-grid {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: 500px 1fr;
+        gap: 12px;
+        align-items: start;
+      }
+
+      .left-col,
+      .right-col {
+        display: grid;
+        gap: 12px;
+        align-content: start;
+      }
+
+      .section {
+        padding: 14px;
+      }
+
+      .section h3 {
+        font-size: 17px;
+      }
+
+      .lead-sync-height {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      .lead-sync-height .lead-workbench {
+        flex: 1;
+        min-height: 0;
+      }
+
+      .lead-sync-height .lead-workbench .pack-card {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      .lead-sync-height .lead-workbench .pack-card .table-wrap {
+        flex: 1;
+        min-height: 0;
+      }
+
+      .user-role-card {
+        min-height: 720px;
+      }
+
+      .row {
+        display: flex;
+        gap: 8px;
+      }
+
+      .row > * {
+        flex: 1;
+      }
+
+      .switch-row {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 10px;
+      }
+
+      .switch {
+        width: 48px;
+        height: 28px;
+        border-radius: 999px;
+        background: #d3d8e4;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .switch::after {
+        content: "";
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #fff;
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        transition: transform 0.2s ease;
+      }
+
+      .switch.active {
+        background: #00a673;
+      }
+
+      .switch.active::after {
+        transform: translateX(20px);
+      }
+
+      .actions {
+        margin-top: 10px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .lead-kpi-pack {
+        margin-top: 10px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .lead-kpi {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fff;
+        padding: 10px 12px;
+      }
+
+      .lead-kpi-value {
+        margin-top: 6px;
+        font-family: "Sora", sans-serif;
+        font-size: 24px;
+        line-height: 1;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .pack-card {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.82);
+        padding: 10px;
+      }
+
+      .lead-workbench {
+        margin-top: 10px;
+        display: grid;
+        grid-template-columns: 1.35fr 1fr;
+        gap: 10px;
+        align-items: start;
+      }
+
+      .lead-workbench .table-wrap {
+        max-height: 420px;
+      }
+
+      .lead-queue-card {
+        min-height: 520px;
+      }
+
+      .lead-action-card {
+        min-height: 520px;
+      }
+
+      .lead-action-card .lead-result {
+        max-height: 180px;
+      }
+
+      .lead-table {
+        table-layout: auto;
+      }
+
+      .lead-table th,
+      .lead-table td {
+        padding: 8px 6px;
+      }
+
+      .lead-table th:nth-child(1),
+      .lead-table td:nth-child(1) {
+        width: 160px;
+        white-space: nowrap;
+      }
+
+      .lead-table th:nth-child(2),
+      .lead-table td:nth-child(2) {
+        width: 40%;
+        white-space: normal;
+        word-break: break-word;
+      }
+
+      .lead-table th:nth-child(3),
+      .lead-table td:nth-child(3) {
+        width: 95px;
+        white-space: nowrap;
+      }
+
+      .lead-table th:nth-child(4),
+      .lead-table td:nth-child(4) {
+        width: 130px;
+        white-space: nowrap;
+      }
+
+      .lead-table th:nth-child(5),
+      .lead-table td:nth-child(5) {
+        width: 150px;
+        white-space: nowrap;
+      }
+
+      .lead-controls {
+        margin-top: 8px;
+      }
+
+      .lead-action-grid {
+        margin-top: 6px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .lead-actions-inline {
+        margin-top: 6px;
+      }
+
+      .lead-result {
+        margin-top: 6px;
+        max-height: 90px;
+      }
+
+      .table-wrap {
+        margin-top: 8px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        max-height: 280px;
+        overflow: auto;
+        background: #fff;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 8px 6px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--ink-2);
+      }
+
+      tr.selectable {
+        cursor: pointer;
+      }
+
+      tr.selectable:hover {
+        background: rgba(17, 93, 219, 0.07);
+      }
+
+      tr.lead-selectable {
+        cursor: pointer;
+      }
+
+      tr.lead-selectable:hover {
+        background: rgba(17, 93, 219, 0.07);
+      }
+
+      tr.selected {
+        background: rgba(17, 93, 219, 0.13);
+      }
+
+      .tag {
+        display: inline-block;
+        border-radius: 999px;
+        padding: 2px 8px;
+        font-size: 11px;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      .tag-ok {
+        color: #0a5b43;
+        background: rgba(0, 118, 82, 0.15);
+      }
+
+      .tag-warn {
+        color: #7b4e00;
+        background: rgba(140, 89, 0, 0.14);
+      }
+
+      .tag-err {
+        color: #76152a;
+        background: rgba(166, 33, 62, 0.12);
+      }
+
+      .perm-hide {
+        opacity: 0.45;
+        pointer-events: none;
+      }
+
+      @media (max-width: 1280px) {
+        .stats-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 980px) {
+        .main-grid {
+          grid-template-columns: 1fr;
+        }
+        .lead-workbench {
+          grid-template-columns: 1fr;
+        }
+        .lead-workbench .table-wrap {
+          max-height: 320px;
+        }
+        .lead-queue-card,
+        .lead-action-card {
+          min-height: 0;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .toolbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .stats-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .actions {
+          grid-template-columns: 1fr;
+        }
+        .lead-kpi-pack {
+          grid-template-columns: 1fr;
+        }
+        .lead-action-grid {
+          grid-template-columns: 1fr;
+        }
+        .section-head {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+
+      @page {
+        size: A4 landscape;
+        margin: 10mm;
+      }
+
+      @media print {
+        * {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        body {
+          background:
+            radial-gradient(circle at 12% 15%, #f9da9f 0%, transparent 34%),
+            radial-gradient(circle at 85% 10%, #c5f4e8 0%, transparent 37%),
+            radial-gradient(circle at 87% 88%, #d6ddff 0%, transparent 28%),
+            linear-gradient(136deg, #f1ebde 0%, #f9f5ee 52%, #edf8f2 100%) !important;
+          padding: 0;
+        }
+
+        .app {
+          width: 100%;
+          margin: 0;
+        }
+
+        .card {
+          break-inside: avoid;
+        }
+
+        .table-wrap {
+          max-height: none !important;
+          overflow: visible !important;
+        }
+
+        body.print-clean {
+          background: #fff !important;
+          color: #111 !important;
+        }
+
+        body.print-clean .card {
+          background: #fff !important;
+          border: 1px solid #9aa0ab;
+          box-shadow: none !important;
+        }
+
+        body.print-clean #loginView,
+        body.print-clean .toolbar-right,
+        body.print-clean .left-col,
+        body.print-clean .results,
+        body.print-clean button,
+        body.print-clean input,
+        body.print-clean select,
+        body.print-clean textarea {
+          display: none !important;
+        }
+
+        body.print-clean .main-grid {
+          grid-template-columns: 1fr !important;
+        }
+
+        body.print-clean .stats-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        body.print-clean .tag {
+          color: #111 !important;
+          background: transparent !important;
+          border: 1px solid #9aa0ab;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <section id="loginView" class="login-wrap">
+        <div class="card login-card">
+          <span class="pill">CLEAR DUES PORTAL</span>
+          <h1 style="margin-top: 12px">Admin Login</h1>
+          <p class="muted">Role-based access for internal collections operations.</p>
+          <label for="loginUser">Username</label>
+          <input id="loginUser" type="text" autocomplete="username" placeholder="admin / ops / viewer / agent" />
+          <label for="loginPass">Password</label>
+          <input id="loginPass" type="password" autocomplete="current-password" />
+          <button id="loginBtn" class="btn-primary" style="width: 100%; margin-top: 14px">Sign In</button>
+          <div id="loginError" class="error"></div>
+        </div>
+      </section>
+
+      <section id="portalView" class="hidden">
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <span class="pill">INTERNAL OPERATIONS</span>
+            <h1>Clear Dues Command Center</h1>
+          </div>
+          <div class="toolbar-right">
+            <span id="currentUser" class="small muted"></span>
+            <button id="refreshBtn" class="btn-outline">Refresh</button>
+            <button id="logoutBtn" class="btn-dark">Logout</button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <article class="card stat">
+            <div class="small muted">Campaigns Sent</div>
+            <div id="statCampaigns" class="value">0</div>
+          </article>
+          <article class="card stat">
+            <div class="small muted">Reminders Sent</div>
+            <div id="statReminders" class="value">0</div>
+          </article>
+          <article class="card stat">
+            <div class="small muted">Inbound Messages</div>
+            <div id="statInbound" class="value">0</div>
+          </article>
+          <article class="card stat">
+            <div class="small muted">Failures</div>
+            <div id="statFailed" class="value">0</div>
+          </article>
+          <article class="card stat">
+            <div class="small muted">Retry Pending</div>
+            <div id="statRetryPending" class="value">0</div>
+          </article>
+          <article class="card stat">
+            <div class="small muted">Notes Tagged</div>
+            <div id="statNotes" class="value">0</div>
+          </article>
+        </div>
+
+        <div class="main-grid">
+          <div class="left-col">
+            <section class="card section">
+              <h3>Switches & Scheduler</h3>
+              <p class="muted small">Disconnect inbound replies instantly to control messaging cost.</p>
+
+              <div class="switch-row">
+                <div>
+                  <strong>Inbound Messaging</strong>
+                  <div id="inboundStatus" class="small muted">Loading...</div>
+                </div>
+                <div id="inboundSwitch" class="switch"></div>
+              </div>
+
+              <label for="retryEnabled">Retry Queue Enabled</label>
+              <select id="retryEnabled" data-perm="settings:edit">
+                <option value="true">true</option>
+                <option value="false">false</option>
+              </select>
+
+              <label for="schedulerEnabled">Scheduler Enabled</label>
+              <select id="schedulerEnabled" data-perm="settings:edit">
+                <option value="true">true</option>
+                <option value="false">false</option>
+              </select>
+
+              <div class="row">
+                <div>
+                  <label for="schedulerCron">Cron</label>
+                  <input id="schedulerCron" type="text" placeholder="0 10 * * *" data-perm="settings:edit" />
+                </div>
+                <div>
+                  <label for="schedulerTz">Timezone</label>
+                  <input id="schedulerTz" type="text" placeholder="Asia/Kolkata" data-perm="settings:edit" />
+                </div>
+              </div>
+
+              <label for="schedulerBatch">Scheduler Batch File</label>
+              <input id="schedulerBatch" type="text" placeholder="./data/last-batch.json" data-perm="settings:edit" />
+
+              <div class="row" style="margin-top: 10px">
+                <button id="saveSettingsBtn" class="btn-primary" data-perm="settings:edit">Save Settings</button>
+                <button id="runSchedulerBtn" class="btn-success" data-perm="scheduler:run">Run Scheduler</button>
+                <button id="runRetriesBtn" class="btn-dark" data-perm="retry:run">Run Retries</button>
+              </div>
+
+              <div id="settingsResult" class="results">No action yet.</div>
+            </section>
+
+            <section class="card section" data-section="campaign-upload">
+              <h3>Upload Batch</h3>
+              <p class="muted small">CSV/XLSX/JSON upload for campaign preview/send and scheduled run source.</p>
+              <input id="fileInput" type="file" accept=".csv,.xlsx,.xls,.json,.txt" data-perm="campaign:upload" />
+              <button id="uploadBtn" class="btn-primary" style="margin-top: 10px; width: 100%" data-perm="campaign:upload">
+                Upload + Preview
+              </button>
+              <div id="uploadResult" class="results">No file uploaded.</div>
+            </section>
+
+            <section class="card section">
+              <h3>Exports</h3>
+              <p class="muted small">Generate CSV, Excel, Google Sheet, and PDF reports.</p>
+              <label for="exportDataset">Dataset</label>
+              <select id="exportDataset" data-perm="export">
+                <option value="reminders">reminders</option>
+                <option value="conversations">conversations</option>
+                <option value="activities">activities</option>
+                <option value="campaigns">campaigns</option>
+                <option value="notes">notes</option>
+                <option value="retries">retries</option>
+                <option value="leads">leads</option>
+              </select>
+              <label for="gsheetTitle">Google Sheet Title</label>
+              <input id="gsheetTitle" type="text" placeholder="Collections Export - Today" data-perm="export" />
+              <label for="reportView">Report PDF View</label>
+              <div class="row">
+                <select id="reportView" data-perm="export">
+                  <option value="org">org</option>
+                  <option value="campaign">campaign</option>
+                  <option value="day">day</option>
+                </select>
+                <input
+                  id="reportCampaignId"
+                  type="number"
+                  min="1"
+                  placeholder="campaign id (optional)"
+                  data-perm="export"
+                />
+              </div>
+              <div class="row">
+                <div>
+                  <label for="reportFrom">From</label>
+                  <input id="reportFrom" type="date" data-perm="export" />
+                </div>
+                <div>
+                  <label for="reportTo">To</label>
+                  <input id="reportTo" type="date" data-perm="export" />
+                </div>
+              </div>
+              <div class="actions">
+                <button id="exportCsvBtn" class="btn-outline" data-perm="export">Download CSV</button>
+                <button id="exportXlsxBtn" class="btn-outline" data-perm="export">Download XLSX</button>
+                <button id="exportGsheetBtn" class="btn-success" data-perm="export">Create GSheet</button>
+              </div>
+              <div class="actions">
+                <button id="downloadPdfReportBtn" class="btn-primary" data-perm="export">Download PDF Report</button>
+                <button id="printDesignBtn" class="btn-outline">Print Design (Color)</button>
+                <button id="printPortalBtn" class="btn-dark">Print Clean (B/W)</button>
+              </div>
+              <div id="exportResult" class="results">No export yet.</div>
+            </section>
+
+            <section class="card section user-role-card" data-section="user-admin">
+              <h3>User Roles</h3>
+              <p class="muted small">Manage users with `admin`, `ops`, `viewer`, and `agent` roles.</p>
+              <div class="row">
+                <div>
+                  <label for="userName">Username</label>
+                  <input id="userName" type="text" placeholder="newops" data-perm="user:manage" />
+                </div>
+                <div>
+                  <label for="userRole">Role</label>
+                  <select id="userRole" data-perm="user:manage">
+                    <option value="agent">agent</option>
+                    <option value="ops">ops</option>
+                    <option value="viewer">viewer</option>
+                    <option value="admin">admin</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div>
+                  <label for="userPass">Password (for create/update)</label>
+                  <input id="userPass" type="password" data-perm="user:manage" />
+                </div>
+                <div>
+                  <label for="userActive">Active</label>
+                  <select id="userActive" data-perm="user:manage">
+                    <option value="true">true</option>
+                    <option value="false">false</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row" style="margin-top: 10px">
+                <button id="createUserBtn" class="btn-primary" data-perm="user:manage">Create User</button>
+                <button id="updateUserBtn" class="btn-dark" data-perm="user:manage">Update User</button>
+              </div>
+              <div id="usersResult" class="results compact-result">No user action yet.</div>
+            </section>
+          </div>
+
+          <div class="right-col">
+            <section class="card section">
+              <h3>Campaign Composer</h3>
+              <p class="muted small">Your reminder goes first; customer can later respond with `1/2/3` for handling.</p>
+              <div class="row">
+                <div>
+                  <label for="sendMode">Send Mode</label>
+                  <select id="sendMode" data-perm="campaign:send">
+                    <option value="auto">auto</option>
+                    <option value="template">template</option>
+                    <option value="text">text</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="templateName">Template Name</label>
+                  <input id="templateName" type="text" placeholder="loan_overdue_reminder_v1" data-perm="campaign:send" />
+                </div>
+              </div>
+              <label for="campaignJson">Campaign JSON</label>
+              <textarea id="campaignJson"></textarea>
+              <div class="row" style="margin-top: 10px">
+                <button id="previewBtn" class="btn-primary" data-perm="campaign:preview">Preview</button>
+                <button id="sendBtn" class="btn-success" data-perm="campaign:send">Send Campaign</button>
+                <button id="useLastBatchBtn" class="btn-dark" data-perm="campaign:preview">Use Last Batch</button>
+              </div>
+              <div id="campaignResult" class="results">No campaign action yet.</div>
+            </section>
+
+            <section class="card section">
+              <h3>Top Activity</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Time</th>
+                      <th>Type</th>
+                      <th>Title</th>
+                    </tr>
+                  </thead>
+                  <tbody id="activityRows"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="card section">
+              <h3>Conversations + Notes</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Time</th>
+                      <th>Phone</th>
+                      <th>Dir</th>
+                      <th>Message</th>
+                      <th>Disposition</th>
+                      <th>Owner</th>
+                      <th>Lead</th>
+                    </tr>
+                  </thead>
+                  <tbody id="conversationRows"></tbody>
+                </table>
+              </div>
+
+              <div class="row" style="margin-top: 8px">
+                <div>
+                  <label for="noteConversationId">Selected Conversation ID</label>
+                  <input id="noteConversationId" type="text" readonly />
+                </div>
+                <div>
+                  <label for="notePhone">Selected Phone</label>
+                  <input id="notePhone" type="text" readonly />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label for="noteDisposition">Disposition</label>
+                  <select id="noteDisposition" data-perm="note:write"></select>
+                </div>
+                <div>
+                  <label for="noteText">Agent Note</label>
+                  <input id="noteText" type="text" placeholder="PTP by Friday, asked for callback..." data-perm="note:write" />
+                </div>
+              </div>
+              <div class="row" style="margin-top: 10px">
+                <button id="saveNoteBtn" class="btn-primary" data-perm="note:write">Save Note/Disposition</button>
+                <button id="loadNotesBtn" class="btn-outline" data-perm="note:view">Load Notes</button>
+              </div>
+              <div id="notesResult" class="results">No note action yet.</div>
+            </section>
+
+            <section class="card section" data-section="lead-desk">
+              <div class="section-head">
+                <h3>Lead Assignment Desk</h3>
+                <button id="loadLeadsBtn" class="btn-outline" data-perm="lead:view">Refresh Leads</button>
+              </div>
+              <p class="muted small">Assign borrower conversations to agents and track closure status.</p>
+              <div class="lead-kpi-pack">
+                <article class="lead-kpi">
+                  <div class="small muted">Leads Open</div>
+                  <div id="statLeadsOpen" class="lead-kpi-value">0</div>
+                </article>
+                <article class="lead-kpi">
+                  <div class="small muted">Leads Unassigned</div>
+                  <div id="statLeadsUnassigned" class="lead-kpi-value">0</div>
+                </article>
+              </div>
+
+              <div class="lead-controls pack-card">
+                <div class="row">
+                  <div>
+                    <label for="leadScope">Scope</label>
+                    <select id="leadScope" data-perm="lead:view">
+                      <option value="all">all</option>
+                      <option value="unassigned">unassigned</option>
+                      <option value="assigned">assigned/open</option>
+                      <option value="mine">mine</option>
+                      <option value="closed">closed</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="leadAssigneeFilter">Assignee</label>
+                    <select id="leadAssigneeFilter" data-perm="lead:view">
+                      <option value="">all</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lead-workbench">
+                <div class="pack-card lead-queue-card">
+                  <div class="small muted">Lead Queue</div>
+                  <div class="table-wrap">
+                    <table class="lead-table">
+                      <thead>
+                        <tr>
+                          <th>Phone</th>
+                          <th>Last Message</th>
+                          <th>Owner</th>
+                          <th>Status</th>
+                          <th>Last Time</th>
+                        </tr>
+                      </thead>
+                      <tbody id="leadRows"></tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="pack-card lead-action-card">
+                  <div class="small muted">Lead Action Center</div>
+                  <div class="lead-action-grid">
+                    <div>
+                      <label for="selectedLeadPhone">Selected Lead Phone</label>
+                      <input id="selectedLeadPhone" type="text" readonly />
+                    </div>
+                    <div>
+                      <label for="leadNextStatus">Set Status</label>
+                      <select id="leadNextStatus" data-perm="lead:update">
+                        <option value="assigned">assigned</option>
+                        <option value="in_progress">in_progress</option>
+                        <option value="closed">closed</option>
+                        <option value="unassigned">unassigned</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="leadAssignTo">Assign To</label>
+                      <select id="leadAssignTo" data-perm="lead:assign">
+                        <option value="">select user</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="leadClosureNote">Closure Note</label>
+                      <input
+                        id="leadClosureNote"
+                        type="text"
+                        placeholder="Paid confirmed, closed by agent..."
+                        data-perm="lead:update"
+                      />
+                    </div>
+                  </div>
+                  <div class="actions lead-actions-inline">
+                    <button id="assignLeadBtn" class="btn-primary" data-perm="lead:assign">Assign Lead</button>
+                    <button id="updateLeadStatusBtn" class="btn-success" data-perm="lead:update">Update Status</button>
+                    <button id="closeLeadBtn" class="btn-dark" data-perm="lead:update">Mark Closed</button>
+                  </div>
+                  <div id="leadsResult" class="results lead-result">No lead action yet.</div>
+                </div>
+              </div>
+            </section>
+
+          </div>
+        </div>
+
+        <section class="card section" style="margin-top: 12px">
+          <h3>Retry Queue</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Retry</th>
+                  <th>Next Attempt</th>
+                </tr>
+              </thead>
+              <tbody id="retryRows"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </div>
+
+    <script>
+      const loginView = document.getElementById("loginView");
+      const portalView = document.getElementById("portalView");
+      const loginError = document.getElementById("loginError");
+      const loginBtn = document.getElementById("loginBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const refreshBtn = document.getElementById("refreshBtn");
+      const currentUser = document.getElementById("currentUser");
+      const inboundSwitch = document.getElementById("inboundSwitch");
+      const inboundStatus = document.getElementById("inboundStatus");
+      const retryEnabled = document.getElementById("retryEnabled");
+      const schedulerEnabled = document.getElementById("schedulerEnabled");
+      const schedulerCron = document.getElementById("schedulerCron");
+      const schedulerTz = document.getElementById("schedulerTz");
+      const schedulerBatch = document.getElementById("schedulerBatch");
+      const saveSettingsBtn = document.getElementById("saveSettingsBtn");
+      const runSchedulerBtn = document.getElementById("runSchedulerBtn");
+      const runRetriesBtn = document.getElementById("runRetriesBtn");
+      const settingsResult = document.getElementById("settingsResult");
+      const uploadBtn = document.getElementById("uploadBtn");
+      const fileInput = document.getElementById("fileInput");
+      const uploadResult = document.getElementById("uploadResult");
+      const campaignJson = document.getElementById("campaignJson");
+      const sendMode = document.getElementById("sendMode");
+      const templateName = document.getElementById("templateName");
+      const previewBtn = document.getElementById("previewBtn");
+      const sendBtn = document.getElementById("sendBtn");
+      const useLastBatchBtn = document.getElementById("useLastBatchBtn");
+      const campaignResult = document.getElementById("campaignResult");
+      const exportDataset = document.getElementById("exportDataset");
+      const gsheetTitle = document.getElementById("gsheetTitle");
+      const reportView = document.getElementById("reportView");
+      const reportCampaignId = document.getElementById("reportCampaignId");
+      const reportFrom = document.getElementById("reportFrom");
+      const reportTo = document.getElementById("reportTo");
+      const exportCsvBtn = document.getElementById("exportCsvBtn");
+      const exportXlsxBtn = document.getElementById("exportXlsxBtn");
+      const exportGsheetBtn = document.getElementById("exportGsheetBtn");
+      const downloadPdfReportBtn = document.getElementById("downloadPdfReportBtn");
+      const printDesignBtn = document.getElementById("printDesignBtn");
+      const printPortalBtn = document.getElementById("printPortalBtn");
+      const exportResult = document.getElementById("exportResult");
+      const userName = document.getElementById("userName");
+      const userRole = document.getElementById("userRole");
+      const userPass = document.getElementById("userPass");
+      const userActive = document.getElementById("userActive");
+      const createUserBtn = document.getElementById("createUserBtn");
+      const updateUserBtn = document.getElementById("updateUserBtn");
+      const usersResult = document.getElementById("usersResult");
+      const noteConversationId = document.getElementById("noteConversationId");
+      const notePhone = document.getElementById("notePhone");
+      const noteDisposition = document.getElementById("noteDisposition");
+      const noteText = document.getElementById("noteText");
+      const saveNoteBtn = document.getElementById("saveNoteBtn");
+      const loadNotesBtn = document.getElementById("loadNotesBtn");
+      const notesResult = document.getElementById("notesResult");
+      const leadScope = document.getElementById("leadScope");
+      const leadAssigneeFilter = document.getElementById("leadAssigneeFilter");
+      const loadLeadsBtn = document.getElementById("loadLeadsBtn");
+      const leadRows = document.getElementById("leadRows");
+      const selectedLeadPhone = document.getElementById("selectedLeadPhone");
+      const leadNextStatus = document.getElementById("leadNextStatus");
+      const leadAssignTo = document.getElementById("leadAssignTo");
+      const leadClosureNote = document.getElementById("leadClosureNote");
+      const assignLeadBtn = document.getElementById("assignLeadBtn");
+      const updateLeadStatusBtn = document.getElementById("updateLeadStatusBtn");
+      const closeLeadBtn = document.getElementById("closeLeadBtn");
+      const leadsResult = document.getElementById("leadsResult");
+      const activityRows = document.getElementById("activityRows");
+      const conversationRows = document.getElementById("conversationRows");
+      const retryRows = document.getElementById("retryRows");
+      const statCampaigns = document.getElementById("statCampaigns");
+      const statReminders = document.getElementById("statReminders");
+      const statInbound = document.getElementById("statInbound");
+      const statFailed = document.getElementById("statFailed");
+      const statRetryPending = document.getElementById("statRetryPending");
+      const statNotes = document.getElementById("statNotes");
+      const statLeadsOpen = document.getElementById("statLeadsOpen");
+      const statLeadsUnassigned = document.getElementById("statLeadsUnassigned");
+
+      let me = null;
+      let inboundEnabled = true;
+      let useLastBatchMode = false;
+      let selectedConversationId = "";
+      let selectedPhone = "";
+      let selectedLeadPhoneValue = "";
+
+      const sample = {
+        records: [
+          {
+            phone: "919876543210",
+            customerName: "Rahul Verma",
+            caseId: "LN-10021",
+            loanAccount: "10021-44",
+            daysOverdue: 12,
+            amountDue: 12850.75,
+            paymentLink: "https://pay.example.com/loan?caseId=LN-10021"
+          },
+          {
+            phone: "919812300001",
+            customerName: "Priya Sharma",
+            caseId: "LN-99334",
+            daysOverdue: 7,
+            amountDue: 6400
+          }
+        ]
+      };
+      campaignJson.value = JSON.stringify(sample, null, 2);
+
+      const now = new Date();
+      const from = new Date();
+      from.setDate(from.getDate() - 29);
+      reportTo.value = now.toISOString().slice(0, 10);
+      reportFrom.value = from.toISOString().slice(0, 10);
+
+      function syncReportViewInputs() {
+        const campaignMode = reportView.value === "campaign";
+        reportCampaignId.disabled = !campaignMode;
+        if (!campaignMode) {
+          reportCampaignId.value = "";
+        }
+      }
+      syncReportViewInputs();
+
+      function can(permission) {
+        return Boolean(me?.permissions?.[permission]);
+      }
+
+      async function api(path, options = {}) {
+        const response = await fetch(path, {
+          credentials: "include",
+          ...options,
+          headers: {
+            "Content-Type": "application/json",
+            ...(options.headers || {})
+          }
+        });
+        const text = await response.text();
+        let body = {};
+        try {
+          body = text ? JSON.parse(text) : {};
+        } catch (_error) {
+          body = { raw: text };
+        }
+        if (!response.ok) {
+          throw new Error(body.error || `Request failed (${response.status})`);
+        }
+        return body;
+      }
+
+      function pretty(value) {
+        return JSON.stringify(value, null, 2);
+      }
+
+      function previewText(value, max = 56) {
+        const normalized = String(value || "").replace(/\s+/g, " ").trim();
+        if (normalized.length <= max) {
+          return normalized;
+        }
+        return `${normalized.slice(0, max - 1)}…`;
+      }
+
+      function shortDateTime(value) {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+          return "-";
+        }
+        return date.toLocaleString(undefined, {
+          day: "2-digit",
+          month: "2-digit",
+          year: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      }
+
+      function compactUsers(rows) {
+        return (Array.isArray(rows) ? rows : []).map((row) => ({
+          username: row.username,
+          role: row.role,
+          active: row.active
+        }));
+      }
+
+      function setInboundSwitch(on) {
+        inboundEnabled = Boolean(on);
+        inboundSwitch.classList.toggle("active", inboundEnabled);
+        inboundStatus.textContent = inboundEnabled
+          ? "Connected (incoming replies are processed)"
+          : "Disconnected (incoming replies ignored)";
+      }
+
+      function levelTag(level, text) {
+        if (level === "error") {
+          return `<span class="tag tag-err">${text}</span>`;
+        }
+        if (level === "warn") {
+          return `<span class="tag tag-warn">${text}</span>`;
+        }
+        return `<span class="tag tag-ok">${text}</span>`;
+      }
+
+      function applyPermissions() {
+        document.querySelectorAll("[data-perm]").forEach((el) => {
+          const perm = el.getAttribute("data-perm");
+          const allowed = can(perm);
+          if (!allowed) {
+            el.classList.add("perm-hide");
+            el.setAttribute("disabled", "disabled");
+          } else {
+            el.classList.remove("perm-hide");
+            el.removeAttribute("disabled");
+          }
+        });
+
+        const userSection = document.querySelector('[data-section="user-admin"]');
+        if (userSection && !can("user:manage")) {
+          userSection.classList.add("hidden");
+        } else if (userSection) {
+          userSection.classList.remove("hidden");
+        }
+
+        const leadSection = document.querySelector('[data-section="lead-desk"]');
+        if (leadSection && !can("lead:view")) {
+          leadSection.classList.add("hidden");
+        } else if (leadSection) {
+          leadSection.classList.remove("hidden");
+        }
+      }
+
+      function syncLeadDeskHeight() {
+        const leadSection = document.querySelector('[data-section="lead-desk"]');
+        const userSection = document.querySelector('[data-section="user-admin"]');
+        if (!leadSection) {
+          return;
+        }
+
+        leadSection.style.minHeight = "";
+        leadSection.classList.remove("lead-sync-height");
+
+        const isDesktop = window.innerWidth > 980;
+        const userVisible = userSection && !userSection.classList.contains("hidden");
+        if (!isDesktop || !userVisible) {
+          return;
+        }
+
+        const target = Math.max(Number(userSection.offsetHeight || 0), 720);
+        if (target <= 0) {
+          return;
+        }
+
+        leadSection.style.minHeight = `${target}px`;
+        leadSection.classList.add("lead-sync-height");
+      }
+
+      function renderActivities(rows) {
+        activityRows.innerHTML = rows
+          .map(
+            (row) => `<tr>
+              <td>${new Date(row.created_at).toLocaleString()}</td>
+              <td>${levelTag(row.level, row.type)}</td>
+              <td>${row.title}</td>
+            </tr>`
+          )
+          .join("");
+      }
+
+      function selectConversation(conversation) {
+        selectedConversationId = String(conversation.id || "");
+        selectedPhone = String(conversation.phone || "");
+        noteConversationId.value = selectedConversationId;
+        notePhone.value = selectedPhone;
+        selectedLeadPhoneValue = selectedPhone;
+        selectedLeadPhone.value = selectedPhone;
+
+        document.querySelectorAll("tr.selectable").forEach((row) => {
+          row.classList.toggle("selected", row.dataset.id === selectedConversationId);
+        });
+      }
+
+      function renderConversations(rows) {
+        conversationRows.innerHTML = rows
+          .map((row) => {
+            const cls = row.status && row.status.includes("failed") ? "warn" : "ok";
+            const leadStatus = row.lead_status || "unassigned";
+            const leadCls = leadStatus === "closed" ? "ok" : leadStatus === "unassigned" ? "warn" : "info";
+            return `<tr class="selectable" data-id="${row.id}">
+              <td>${new Date(row.created_at).toLocaleString()}</td>
+              <td>${row.phone}</td>
+              <td>${levelTag(cls, row.direction)}</td>
+              <td>${previewText(row.message_text, 95)}</td>
+              <td>${row.latest_disposition || "-"}</td>
+              <td>${row.assigned_to || "-"}</td>
+              <td>${levelTag(leadCls, leadStatus)}</td>
+            </tr>`;
+          })
+          .join("");
+
+        document.querySelectorAll("tr.selectable").forEach((row) => {
+          row.addEventListener("click", () => {
+            const id = row.dataset.id;
+            const found = rows.find((item) => String(item.id) === String(id));
+            if (found) {
+              selectConversation(found);
+            }
+          });
+        });
+      }
+
+      function renderRetries(rows) {
+        retryRows.innerHTML = rows
+          .map((row) => {
+            const cls =
+              row.status === "dead" ? "error" : row.status === "pending" ? "warn" : "info";
+            return `<tr>
+              <td>${row.id}</td>
+              <td>${row.phone}</td>
+              <td>${levelTag(cls, row.status)}</td>
+              <td>${row.retry_count}/${row.max_attempts}</td>
+              <td>${new Date(row.next_attempt_at).toLocaleString()}</td>
+            </tr>`;
+          })
+          .join("");
+      }
+
+      function selectLead(row) {
+        selectedLeadPhoneValue = String(row.phone || "");
+        selectedLeadPhone.value = selectedLeadPhoneValue;
+        leadClosureNote.value = row.closure_note || "";
+        leadNextStatus.value = row.lead_status || "assigned";
+
+        document.querySelectorAll("tr.lead-selectable").forEach((element) => {
+          element.classList.toggle("selected", element.dataset.phone === selectedLeadPhoneValue);
+        });
+      }
+
+      function renderLeads(rows) {
+        leadRows.innerHTML = rows
+          .map((row) => {
+            const status = row.lead_status || "unassigned";
+            const cls = status === "closed" ? "ok" : status === "unassigned" ? "warn" : "info";
+            return `<tr class="lead-selectable" data-phone="${row.phone}">
+              <td>${row.phone}</td>
+              <td>${previewText(row.last_message_text, 84)}</td>
+              <td>${row.assigned_to || "-"}</td>
+              <td>${levelTag(cls, status)}</td>
+              <td>${shortDateTime(row.last_message_at)}</td>
+            </tr>`;
+          })
+          .join("");
+
+        document.querySelectorAll("tr.lead-selectable").forEach((rowEl) => {
+          rowEl.addEventListener("click", () => {
+            const phone = rowEl.dataset.phone;
+            const found = rows.find((item) => String(item.phone) === String(phone));
+            if (found) {
+              selectLead(found);
+            }
+          });
+        });
+      }
+
+      async function loadDispositions() {
+        if (!can("note:view")) {
+          noteDisposition.innerHTML = "<option value=''>-</option>";
+          return;
+        }
+        const data = await api("/admin/dispositions", { method: "GET" });
+        noteDisposition.innerHTML = ["<option value=''>Select disposition</option>"]
+          .concat(data.rows.map((item) => `<option value="${item}">${item}</option>`))
+          .join("");
+      }
+
+      async function loadDashboard() {
+        const data = await api("/admin/dashboard", { method: "GET" });
+
+        me = data.me;
+        currentUser.textContent = `Logged in as ${me.username} (${me.role})`;
+        applyPermissions();
+
+        statCampaigns.textContent = data.stats.campaignsSent || 0;
+        statReminders.textContent = data.stats.remindersSent || 0;
+        statInbound.textContent = data.stats.inboundMessages || 0;
+        statFailed.textContent = data.stats.failedMessages || 0;
+        statRetryPending.textContent = data.retryStats.pending || 0;
+        statNotes.textContent = data.stats.notesCount || 0;
+        const leadsOpen = (data.leadStats?.assigned || 0) + (data.leadStats?.inProgress || 0);
+        statLeadsOpen.textContent = leadsOpen;
+        statLeadsUnassigned.textContent = data.leadStats?.unassigned || 0;
+
+        setInboundSwitch(Boolean(data.settings.inbound_enabled));
+        retryEnabled.value = String(Boolean(data.settings.retry_enabled));
+        schedulerEnabled.value = String(Boolean(data.settings.scheduler_enabled));
+        schedulerCron.value = String(data.settings.scheduler_cron || "0 10 * * *");
+        schedulerTz.value = String(data.settings.scheduler_timezone || "Asia/Kolkata");
+        schedulerBatch.value = String(data.settings.scheduler_batch_file || "./data/last-batch.json");
+
+        renderActivities(data.recentActivity || []);
+        renderConversations(data.recentConversations || []);
+        renderLeads(data.recentLeads || []);
+        renderRetries(data.recentRetries || []);
+        syncLeadDeskHeight();
+      }
+
+      async function loadUsers() {
+        if (!can("user:manage")) {
+          usersResult.textContent = "No permission.";
+          return;
+        }
+        const result = await api("/admin/users", { method: "GET" });
+        usersResult.textContent = pretty(compactUsers(result.rows));
+        syncLeadDeskHeight();
+      }
+
+      async function loadAssignableUsers() {
+        if (!can("lead:view")) {
+          return;
+        }
+
+        const currentFilter = leadAssigneeFilter.value;
+        const currentAssignTo = leadAssignTo.value;
+        const result = await api("/admin/agents", { method: "GET" });
+        const rows = Array.isArray(result.rows) ? result.rows : [];
+
+        leadAssigneeFilter.innerHTML = ["<option value=''>all</option>"]
+          .concat(rows.map((item) => `<option value="${item.username}">${item.username} (${item.role})</option>`))
+          .join("");
+        leadAssignTo.innerHTML = ["<option value=''>select user</option>"]
+          .concat(rows.map((item) => `<option value="${item.username}">${item.username} (${item.role})</option>`))
+          .join("");
+
+        if (currentFilter && rows.some((item) => item.username === currentFilter)) {
+          leadAssigneeFilter.value = currentFilter;
+        }
+        if (currentAssignTo && rows.some((item) => item.username === currentAssignTo)) {
+          leadAssignTo.value = currentAssignTo;
+        }
+
+        if (me?.role === "agent") {
+          leadScope.value = "mine";
+          leadScope.setAttribute("disabled", "disabled");
+          leadAssigneeFilter.value = me.username;
+          leadAssigneeFilter.setAttribute("disabled", "disabled");
+        } else {
+          leadScope.removeAttribute("disabled");
+          leadAssigneeFilter.removeAttribute("disabled");
+        }
+      }
+
+      async function loadLeads() {
+        if (!can("lead:view")) {
+          return;
+        }
+
+        const params = new URLSearchParams();
+        params.set("scope", leadScope.value);
+        if (leadAssigneeFilter.value) {
+          params.set("assignee", leadAssigneeFilter.value);
+        }
+
+        const result = await api(`/admin/leads?${params.toString()}`, { method: "GET" });
+        renderLeads(result.rows || []);
+
+        if (selectedLeadPhoneValue) {
+          const selected = (result.rows || []).find((item) => item.phone === selectedLeadPhoneValue);
+          if (selected) {
+            selectLead(selected);
+          }
+        }
+
+        if (result.stats) {
+          statLeadsOpen.textContent = (result.stats.assigned || 0) + (result.stats.inProgress || 0);
+          statLeadsUnassigned.textContent = result.stats.unassigned || 0;
+        }
+        syncLeadDeskHeight();
+      }
+
+      async function loadNotesForSelectedPhone() {
+        if (!selectedPhone) {
+          notesResult.textContent = "Select a conversation row first.";
+          return;
+        }
+        const result = await api(`/admin/notes?phone=${encodeURIComponent(selectedPhone)}&limit=50`, {
+          method: "GET"
+        });
+        notesResult.textContent = pretty(result.rows);
+      }
+
+      async function checkSession() {
+        try {
+          const data = await api("/admin/auth/me", { method: "GET" });
+          me = data;
+          loginView.classList.add("hidden");
+          portalView.classList.remove("hidden");
+          applyPermissions();
+          await loadDispositions();
+          await loadDashboard();
+          await loadAssignableUsers();
+          await loadLeads();
+          if (can("user:manage")) {
+            await loadUsers();
+          }
+        } catch (_error) {
+          loginView.classList.remove("hidden");
+          portalView.classList.add("hidden");
+        }
+      }
+
+      loginBtn.addEventListener("click", async () => {
+        loginError.textContent = "";
+        try {
+          const username = document.getElementById("loginUser").value.trim();
+          const password = document.getElementById("loginPass").value;
+          const result = await api("/admin/auth/login", {
+            method: "POST",
+            body: JSON.stringify({ username, password })
+          });
+          me = result;
+          await checkSession();
+        } catch (error) {
+          loginError.textContent = error.message;
+        }
+      });
+
+      logoutBtn.addEventListener("click", async () => {
+        await api("/admin/auth/logout", { method: "POST", body: "{}" });
+        loginView.classList.remove("hidden");
+        portalView.classList.add("hidden");
+      });
+
+      refreshBtn.addEventListener("click", async () => {
+        await loadDashboard();
+        await loadAssignableUsers();
+        await loadLeads();
+        if (can("user:manage")) {
+          await loadUsers();
+        }
+      });
+
+      inboundSwitch.addEventListener("click", async () => {
+        if (!can("settings:edit")) {
+          return;
+        }
+        const next = !inboundEnabled;
+        try {
+          const result = await api("/admin/settings", {
+            method: "POST",
+            body: JSON.stringify({ inbound_enabled: next })
+          });
+          settingsResult.textContent = pretty(result);
+          setInboundSwitch(Boolean(result.settings.inbound_enabled));
+          await loadDashboard();
+        } catch (error) {
+          settingsResult.textContent = error.message;
+        }
+      });
+
+      saveSettingsBtn.addEventListener("click", async () => {
+        try {
+          const result = await api("/admin/settings", {
+            method: "POST",
+            body: JSON.stringify({
+              inbound_enabled: inboundEnabled,
+              retry_enabled: retryEnabled.value === "true",
+              scheduler_enabled: schedulerEnabled.value === "true",
+              scheduler_cron: schedulerCron.value.trim(),
+              scheduler_timezone: schedulerTz.value.trim(),
+              scheduler_batch_file: schedulerBatch.value.trim()
+            })
+          });
+          settingsResult.textContent = pretty(result);
+          await loadDashboard();
+        } catch (error) {
+          settingsResult.textContent = error.message;
+        }
+      });
+
+      runSchedulerBtn.addEventListener("click", async () => {
+        try {
+          const result = await api("/admin/scheduler/run-now", { method: "POST", body: "{}" });
+          settingsResult.textContent = pretty(result);
+          await loadDashboard();
+        } catch (error) {
+          settingsResult.textContent = error.message;
+        }
+      });
+
+      runRetriesBtn.addEventListener("click", async () => {
+        try {
+          const result = await api("/admin/retries/run-now", { method: "POST", body: "{}" });
+          settingsResult.textContent = pretty(result);
+          await loadDashboard();
+        } catch (error) {
+          settingsResult.textContent = error.message;
+        }
+      });
+
+      uploadBtn.addEventListener("click", async () => {
+        if (!fileInput.files || fileInput.files.length === 0) {
+          uploadResult.textContent = "Choose a file first.";
+          return;
+        }
+        const form = new FormData();
+        form.append("file", fileInput.files[0]);
+        try {
+          const response = await fetch("/admin/campaign/upload", {
+            method: "POST",
+            credentials: "include",
+            body: form
+          });
+          const json = await response.json();
+          if (!response.ok) {
+            throw new Error(json.error || "Upload failed");
+          }
+          uploadResult.textContent = pretty(json);
+          campaignJson.value = JSON.stringify({ records: json.valid || [] }, null, 2);
+        } catch (error) {
+          uploadResult.textContent = error.message;
+        }
+      });
+
+      function buildCampaignPayload() {
+        if (useLastBatchMode) {
+          return {
+            useLastBatch: true,
+            sendMode: sendMode.value,
+            templateName: templateName.value.trim()
+          };
+        }
+        const parsed = JSON.parse(campaignJson.value);
+        parsed.sendMode = sendMode.value;
+        if (templateName.value.trim()) {
+          parsed.templateName = templateName.value.trim();
+        }
+        return parsed;
+      }
+
+      function buildReportQuery() {
+        const params = new URLSearchParams();
+        params.set("view", reportView.value);
+        if (reportFrom.value) {
+          params.set("from", reportFrom.value);
+        }
+        if (reportTo.value) {
+          params.set("to", reportTo.value);
+        }
+        const campaignId = reportCampaignId.value.trim();
+        if (campaignId) {
+          params.set("campaignId", campaignId);
+        }
+        return params.toString();
+      }
+
+      previewBtn.addEventListener("click", async () => {
+        try {
+          const result = await api("/admin/campaign/preview", {
+            method: "POST",
+            body: JSON.stringify(buildCampaignPayload())
+          });
+          campaignResult.textContent = pretty(result);
+        } catch (error) {
+          campaignResult.textContent = error.message;
+        }
+      });
+
+      sendBtn.addEventListener("click", async () => {
+        try {
+          const result = await api("/admin/campaign/send", {
+            method: "POST",
+            body: JSON.stringify(buildCampaignPayload())
+          });
+          campaignResult.textContent = pretty(result);
+          await loadDashboard();
+        } catch (error) {
+          campaignResult.textContent = error.message;
+        }
+      });
+
+      useLastBatchBtn.addEventListener("click", () => {
+        useLastBatchMode = !useLastBatchMode;
+        useLastBatchBtn.classList.toggle("btn-success", useLastBatchMode);
+        useLastBatchBtn.classList.toggle("btn-dark", !useLastBatchMode);
+        useLastBatchBtn.textContent = useLastBatchMode ? "Using Last Batch" : "Use Last Batch";
+      });
+
+      reportView.addEventListener("change", () => {
+        syncReportViewInputs();
+      });
+
+      exportCsvBtn.addEventListener("click", () => {
+        window.open(`/admin/export/${exportDataset.value}.csv`, "_blank");
+      });
+
+      exportXlsxBtn.addEventListener("click", () => {
+        window.open(`/admin/export/${exportDataset.value}.xlsx`, "_blank");
+      });
+
+      exportGsheetBtn.addEventListener("click", async () => {
+        try {
+          const result = await api("/admin/export/google-sheet", {
+            method: "POST",
+            body: JSON.stringify({
+              dataset: exportDataset.value,
+              title: gsheetTitle.value.trim()
+            })
+          });
+          exportResult.innerHTML = `<a href="${result.url}" target="_blank">${result.url}</a>`;
+        } catch (error) {
+          exportResult.textContent = error.message;
+        }
+      });
+
+      downloadPdfReportBtn.addEventListener("click", () => {
+        const query = buildReportQuery();
+        window.open(`/admin/report.pdf?${query}`, "_blank");
+      });
+
+      function printWithMode(mode) {
+        if (mode === "clean") {
+          document.body.classList.add("print-clean");
+        } else {
+          document.body.classList.remove("print-clean");
+        }
+        window.print();
+      }
+
+      window.addEventListener("afterprint", () => {
+        document.body.classList.remove("print-clean");
+      });
+
+      window.addEventListener("resize", () => {
+        syncLeadDeskHeight();
+      });
+
+      printDesignBtn.addEventListener("click", () => {
+        printWithMode("design");
+      });
+
+      printPortalBtn.addEventListener("click", () => {
+        printWithMode("clean");
+      });
+
+      createUserBtn.addEventListener("click", async () => {
+        try {
+          const result = await api("/admin/users", {
+            method: "POST",
+            body: JSON.stringify({
+              username: userName.value.trim(),
+              password: userPass.value,
+              role: userRole.value,
+              active: userActive.value === "true"
+            })
+          });
+          usersResult.textContent = pretty(compactUsers(result.rows));
+          userPass.value = "";
+          syncLeadDeskHeight();
+        } catch (error) {
+          usersResult.textContent = error.message;
+        }
+      });
+
+      updateUserBtn.addEventListener("click", async () => {
+        try {
+          const payload = {
+            role: userRole.value,
+            active: userActive.value === "true"
+          };
+          if (userPass.value) {
+            payload.password = userPass.value;
+          }
+          const result = await api(`/admin/users/${encodeURIComponent(userName.value.trim())}`, {
+            method: "PATCH",
+            body: JSON.stringify(payload)
+          });
+          usersResult.textContent = pretty(compactUsers(result.rows));
+          userPass.value = "";
+          syncLeadDeskHeight();
+        } catch (error) {
+          usersResult.textContent = error.message;
+        }
+      });
+
+      saveNoteBtn.addEventListener("click", async () => {
+        try {
+          const payload = {
+            conversationId: selectedConversationId ? Number(selectedConversationId) : null,
+            phone: notePhone.value.trim(),
+            disposition: noteDisposition.value,
+            noteText: noteText.value.trim()
+          };
+          const result = await api("/admin/notes", {
+            method: "POST",
+            body: JSON.stringify(payload)
+          });
+          notesResult.textContent = pretty(result.rows);
+          noteText.value = "";
+          await loadDashboard();
+        } catch (error) {
+          notesResult.textContent = error.message;
+        }
+      });
+
+      loadNotesBtn.addEventListener("click", async () => {
+        await loadNotesForSelectedPhone();
+      });
+
+      function getSelectedLeadPhone() {
+        return String(selectedLeadPhone.value || selectedLeadPhoneValue || notePhone.value || "").trim();
+      }
+
+      leadScope.addEventListener("change", async () => {
+        await loadLeads();
+      });
+
+      leadAssigneeFilter.addEventListener("change", async () => {
+        await loadLeads();
+      });
+
+      loadLeadsBtn.addEventListener("click", async () => {
+        await loadLeads();
+      });
+
+      assignLeadBtn.addEventListener("click", async () => {
+        try {
+          const phone = getSelectedLeadPhone();
+          if (!phone) {
+            leadsResult.textContent = "Select a lead or conversation row first.";
+            return;
+          }
+          if (!leadAssignTo.value) {
+            leadsResult.textContent = "Select Assign To user.";
+            return;
+          }
+
+          const result = await api("/admin/leads/assign", {
+            method: "POST",
+            body: JSON.stringify({
+              phone,
+              assignedTo: leadAssignTo.value,
+              status: "assigned"
+            })
+          });
+          leadsResult.textContent = pretty(result.lead || result);
+          await loadDashboard();
+          await loadLeads();
+        } catch (error) {
+          leadsResult.textContent = error.message;
+        }
+      });
+
+      updateLeadStatusBtn.addEventListener("click", async () => {
+        try {
+          const phone = getSelectedLeadPhone();
+          if (!phone) {
+            leadsResult.textContent = "Select a lead or conversation row first.";
+            return;
+          }
+
+          const result = await api("/admin/leads/status", {
+            method: "POST",
+            body: JSON.stringify({
+              phone,
+              status: leadNextStatus.value,
+              closureNote: leadClosureNote.value.trim()
+            })
+          });
+          leadsResult.textContent = pretty(result.lead || result);
+          await loadDashboard();
+          await loadLeads();
+        } catch (error) {
+          leadsResult.textContent = error.message;
+        }
+      });
+
+      closeLeadBtn.addEventListener("click", async () => {
+        try {
+          const phone = getSelectedLeadPhone();
+          if (!phone) {
+            leadsResult.textContent = "Select a lead or conversation row first.";
+            return;
+          }
+
+          const result = await api("/admin/leads/status", {
+            method: "POST",
+            body: JSON.stringify({
+              phone,
+              status: "closed",
+              closureNote: leadClosureNote.value.trim()
+            })
+          });
+          leadsResult.textContent = pretty(result.lead || result);
+          await loadDashboard();
+          await loadLeads();
+        } catch (error) {
+          leadsResult.textContent = error.message;
+        }
+      });
+
+      checkSession();
+    </script>
+  </body>
+</html>
